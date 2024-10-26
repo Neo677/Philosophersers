@@ -25,7 +25,6 @@
 
 #define TIMES_TO_COUNT 21000
 
-
 typedef struct s_count
 {
     pthread_mutex_t count_mutex;

@@ -17,5 +17,3 @@ void		ft_philo_receive(t_philo philosopher[], pthread_mutex_t forks[])
 		i++;
 	}
 }
-
-
