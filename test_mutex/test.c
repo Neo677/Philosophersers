@@ -13,9 +13,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Déclaration globale du mutex et du solde du compte
-// pthread_mutex_t mutex;
-// int account_balance = 0;
+ Déclaration globale du mutex et du solde du compte
+ pthread_mutex_t mutex;
+ int account_balance = 0;
 
 #define NC "\e[0m"
 #define YELLOW "\e[33m"
@@ -38,7 +38,7 @@ typedef struct s_lock
 	unsigned int count;
 }				t_lock;
 
-// void	*routine_of_thread(void	*data)
+ void	*routine_of_thread(void	*data)
 // {
 // 	pthread_t id;
 // 	t_count *counter;
@@ -144,91 +144,91 @@ int main(void)
 	return (0);
 }
 
-// int main(void)
-// {
-// 	pthread_t id_1;
-// 	pthread_t id_2;
+ int main(void)
+ {
+ 	pthread_t id_1;
+ 	pthread_t id_2;
 
-// 	t_count counter;
+ 	t_count counter;
 
-// 	counter.count = 0;
+ 	counter.count = 0;
 
-// 	pthread_mutex_init(&counter.count_mutex, NULL);
-// 	printf("Main: le compte attendu est %s%u%s\n", GREEN, 2 * TIMES_TO_COUNT, NC);
+ 	pthread_mutex_init(&counter.count_mutex, NULL);
+ 	printf("Main: le compte attendu est %s%u%s\n", GREEN, 2 * TIMES_TO_COUNT, NC);
 
-// 	pthread_create(&id_1, NULL, routine_of_thread, &counter);
-// 	printf("Main: Creation du premier thread [%ld]\n", id_1);
-// 	pthread_create(&id_2, NULL, routine_of_thread, &counter);
-// 	printf("Main: Creation du premier thread [%ld]\n", id_2);
+ 	pthread_create(&id_1, NULL, routine_of_thread, &counter);
+ 	printf("Main: Creation du premier thread [%ld]\n", id_1);
+ 	pthread_create(&id_2, NULL, routine_of_thread, &counter);
+ 	printf("Main: Creation du premier thread [%ld]\n", id_2);
 
-// 	pthread_join(id_1, NULL);
-// 	printf("Main: Union du premier thread [%ld]\n", id_1);
-// 	pthread_join(id_2, NULL);
-// 	printf("Main: Union du deuxieme thread [%ld]\n", id_2);
+ 	pthread_join(id_1, NULL);
+ 	printf("Main: Union du premier thread [%ld]\n", id_1);
+ 	pthread_join(id_2, NULL);
+ 	printf("Main: Union du deuxieme thread [%ld]\n", id_2);
 
-// 	if (counter.count != (2 * TIMES_TO_COUNT))
-// 		printf("%sMain: Erreur ! Le compte est de %u%s\n", RED, counter.count, NC);
-// 	else
-// 		printf("%sMain: Ok. Le compte est de %u%s\n", GREEN, counter.count, NC);
-// 	pthread_mutex_destroy(&counter.count_mutex);
-// 	return (0);
-// }
-
-
-// // Fonction pour lire le solde du compte
-// int read_montant() {
-//     int montant;
-//     pthread_mutex_lock(&mutex);
-//     montant = account_balance;
-//     pthread_mutex_unlock(&mutex);
-//     return montant;
-// }
-
-// void *depot(void *arg) {
-//     int *montant = (int *)arg;
-
-//     pthread_mutex_lock(&mutex);
-//     account_balance += *montant;
-//    // printf("Nouveau solde après dépôt de %d: %d\n", *montant, account_balance);
-//     pthread_mutex_unlock(&mutex);
-
-//     return NULL;
-// }
-
-// int main() {
-//     pthread_t thread1, thread2, thread3;
-
-//     // Initialiser le mutex
-//     pthread_mutex_init(&mutex, NULL);
-
-//     int depot1 = 53;
-//     int depot2 = 5;
-//     int depot3 = 5;
-
-//     // Créer les threads
-//     pthread_create(&thread1, NULL, depot, (void *)&depot1);
-// 	pthread_create(&thread2, NULL, depot, (void *)&depot2);
-// 	pthread_create(&thread3, NULL, depot, (void *)&depot3);
-
-//     int transfert = read_montant();
-//     printf("depot = %d\n", depot1);
-//     printf("depot = %d\n", depot2);
-//     printf("depot = %d\n", depot3);
-
-// 	printf("montant = %d\n", );
-//     // Attendre que les threads se terminent
-//     pthread_join(thread1, NULL);
-//     pthread_join(thread2, NULL);
-//     pthread_join(thread3, NULL);
+ 	if (counter.count != (2 * TIMES_TO_COUNT))
+ 		printf("%sMain: Erreur ! Le compte est de %u%s\n", RED, counter.count, NC);
+ 	else
+ 		printf("%sMain: Ok. Le compte est de %u%s\n", GREEN, counter.count, NC);
+ 	pthread_mutex_destroy(&counter.count_mutex);
+ 	return (0);
+ }
 
 
+  Fonction pour lire le solde du compte
+ int read_montant() {
+     int montant;
+     pthread_mutex_lock(&mutex);
+     montant = account_balance;
+     pthread_mutex_unlock(&mutex);
+     return montant;
+ }
+
+ void *depot(void *arg) {
+     int *montant = (int *)arg;
+
+     pthread_mutex_lock(&mutex);
+     account_balance += *montant;
+     printf("Nouveau solde après dépôt de %d: %d\n", *montant, account_balance);
+     pthread_mutex_unlock(&mutex);
+
+     return NULL;
+ }
+
+ int main() {
+     pthread_t thread1, thread2, thread3;
+
+      Initialiser le mutex
+     pthread_mutex_init(&mutex, NULL);
+
+     int depot1 = 53;
+     int depot2 = 5;
+     int depot3 = 5;
+
+      Créer les threads
+     pthread_create(&thread1, NULL, depot, (void *)&depot1);
+ 	pthread_create(&thread2, NULL, depot, (void *)&depot2);
+ 	pthread_create(&thread3, NULL, depot, (void *)&depot3);
+
+     int transfert = read_montant();
+     printf("depot = %d\n", depot1);
+     printf("depot = %d\n", depot2);
+     printf("depot = %d\n", depot3);
+
+ 	printf("montant = %d\n", );
+      Attendre que les threads se terminent
+     pthread_join(thread1, NULL);
+     pthread_join(thread2, NULL);
+     pthread_join(thread3, NULL);
 
 
-//     // Détruire le mutex
-//     pthread_mutex_destroy(&mutex);
 
-//     int total = read_montant();
-//     printf("total montant = %d\n", total);
 
-//     return 0;
-// }
+      Détruire le mutex
+     pthread_mutex_destroy(&mutex);
+
+     int total = read_montant();
+     printf("total montant = %d\n", total);
+
+     return 0;
+ }

@@ -46,3 +46,4 @@ int stop(t_philosopher *philo)
         ft_printf("Each philosopher ate %d time(s)\n", philo->a.ms_eat)
     free(philo->ph);
 }
+
