@@ -6,14 +6,14 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
-#include <stdlib.h>
+#include <stdlib.h> 👀 
 #include <time.h>
 
 // a enlever lors du push
 
 #include <../libft/libft.h>
 
-//          arg totaux du programme
+
 typedef	struct s_arguments
 {
     int sleep;

@@ -15,3 +15,7 @@ Pour faire tout ce beau Merdier :
     on va commencer par cree des fonction utilitaire au philosphe pour les faire dormier les faire penser, pour mettre a jours le temps et verifier si l'un d'eux est mort.
 
     on va ensuite initiliser les threads les faire demarer avec les bonne valeur pour que la simulations se passe au mieux possible (phtread_mutex_init), attribuers les valeurs comme id du philo, le nombre de M-seconde pour manger et un compteur pour le temps que prend le programme. 
+
+
+    continuer sur une fonction pour le timer et mettre a jours chaque philo
+
