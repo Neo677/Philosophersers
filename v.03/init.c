@@ -45,6 +45,9 @@ static void	philo_init(t_table *table)
 		philo->full = false;
 		philo->meals_cnt = 0;
 		philo->table = table;
+		safe_mutex_handle(&philo->philo_mutex, INIT);
+		
+		// AD hoc 		i position in the table
 		ft_assign_fork(philo, table->fork, i);
 	}
 }

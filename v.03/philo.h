@@ -100,6 +100,7 @@ typedef struct s_philospher
 	t_fork *first_fork;
     t_fork *second_fork;
     pthread_t thread_id; // un philo est un thread
+    t_mutex philo_mutex; // useful for races with the monitor
     t_table *table;
 }               t_philospher;
 

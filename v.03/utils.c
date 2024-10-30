@@ -26,7 +26,7 @@ long get_time(t_time_code *time_code)
 	if (gettimeofday(&tv, NULL));
 		error_exit("Gettimeofday failed");
 	if (SECOND == time_code)
-		return (tv.tv_sec + (tv.tv_usec / 1e6))
+		return (tv.tv_sec + (tv.tv_usec / 1e6)) // convertion
 	else if (MILLISECONDS == time_code)
 		return ((tv.tv_sec * 1e3) + (tv.tv_usec / 1e3));
 	else if (MICROSECONDE == time_code)
