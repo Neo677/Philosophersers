@@ -1,52 +1,69 @@
-//          header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thobenel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/30 14:07:12 by thobenel          #+#    #+#             */
+/*   Updated: 2024/10/30 14:07:15 by thobenel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-static void ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
+/*
+	EVEN ODD fork assignement
+*/
+static void	ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
 {
-    int philo_nbrs;
+	int	philo_nbrs;
 
-    philo_nbrs = philo->table->philo_nbr;
-
-    // == positions
-    philo->righ_fork = forks(position);
-    //      dead_lock
-    philo->left_fork = fork[(position + 1) % philo_nbrs];
-    
+	philo_nbrs = philo->table->philo_nbr;
+	// == positions
+	philo->first_fork = forks(position);
+	//      dead_lock
+	philo->second_fork = fork[(position + 1) % philo_nbrs];
+	if (philo->id % 2)
+	{
+		philo->first_fork = forks(position);
+		//      dead_lock
+		philo->second_fork = fork[(position + 1) % philo_nbrs];
+	}
 }
 
-static void philo_init(t_table *table)
+static void	philo_init(t_table *table)
 {
-    int i;
-    t_philospher *philo;
+	int				i;
+	t_philospher	*philo;
 
-    i = -1;
-    while(++i < table->philo_nbr)
-    {
-        philo = table->philos + i;
-        philo->id = i + 1;
-        philo->full = false;
-        philo->meals_cnt = 0;
-        philo->table = table;
-
-        ft_assign_fork(philo, table->fork, i);
-    }
+	i = -1;
+	while (++i < table->philo_nbr)
+	{
+		philo = table->philos + i;
+		philo->id = i + 1;
+		philo->full = false;
+		philo->meals_cnt = 0;
+		philo->table = table;
+		ft_assign_fork(philo, table->fork, i);
+	}
 }
 
-void data_init(t_table *table)
+void	data_init(t_table *table)
 {
-    int i;
+	int	i;
 
-    i = -1;
-
-    table->end_simaltions = false;
-    table->philos = safe_malloc(sizeof(t_philospher) * table->philo_nbr);
-    table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
-
-    while(++i < table->philo_nbr)
-    {
-        safe_mutex(table->fork[i].fork, INIT);
-        table->fork[i].fork_id = i; // super pour debug
-    }
-    philo_init(table); // todo
+	i = -1;
+	table->end_simaltions = false;
+	table->all_thread_ready = false;
+	table->philos = safe_malloc(sizeof(t_philospher) * table->philo_nbr);
+	safe_mutex_handle(&table->table_mutex, INIT);
+	safe_mutex_handle(&table->write_mutex, INIT);
+	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
+	while (++i < table->philo_nbr)
+	{
+		safe_mutex(table->fork[i].fork, INIT);
+		table->fork[i].fork_id = i; // super pour debug
+	}
+	philo_init(table); // todo
 }

@@ -1,3 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   safe_fonction.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thobenel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/30 14:07:48 by thobenel          #+#    #+#             */
+/*   Updated: 2024/10/30 14:07:50 by thobenel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+
 #include "philo.h"
 
 /*
@@ -41,7 +55,7 @@ static void handle_mutex_error(int status, t_opcode opcode)
         lock
         unlock
 */
-void    safe_mutex(t_mutex *mutex, t_opcode opcode)
+void    safe_mutex_handle(t_mutex *mutex, t_opcode opcode)
 {
     if (opcode == LOCK)
         handle_mutex_error(pthread_mutex_lock(mutex), opcode);
@@ -66,13 +80,13 @@ static void handle_thread_error(int status, t_opcode opcode)
     if (status == EAGAIN) 
         error_exit("No ressource to create another thread");
     else if (status == EPERM)
-        error_exit("The caller does not ahve appropriates permissions\n");
+        error_exit("The caller does not have appropriates permissions\n");
     else if (status == EINVAL && opcode == CREATE)
         error_exit("The value specified by attr is invalid.");
     else if (status == EINVAL && (opcode == JOIN || opcode == DETACH))
         error_exit("The value specified by thread is not joinable\n");
     else if (status == ESRCH)
-        error_exit("No threead could be found corresponding to that" "specified by the given thread ID, thread.");
+        error_exit("No thread could be found corresponding to that" "specified by the given thread ID, thread.");
     else if (status == EDEADLK)
         error_exit("A deadlock was detected or the value of" "thread specifies the calling thread.");
 }
@@ -80,8 +94,9 @@ static void handle_thread_error(int status, t_opcode opcode)
 /*
     One fonction to control thread 
         create, join, detach
+	 wrapper fonction    ptr to thread data type / ptr to fonction / ptr to data / ptr opcode struct  
 */                          
-//      wrapper fonction    ptr to thread data type / ptr to fonction / ptr to data / ptr opcode struct   
+//      
 void    safe_thread_handle(t_mutex *thread, void *(*foo)(void *), void *data, t_opcode opcode)
 {
     if (opcode == CREATE)

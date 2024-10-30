@@ -1,4 +1,15 @@
-//      header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thobenel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/30 14:07:29 by thobenel          #+#    #+#             */
+/*   Updated: 2024/10/30 14:07:31 by thobenel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #ifndef PHILO_H
  #define PHILO_H
@@ -35,6 +46,20 @@ typedef pthread_mutex_t t_mutex;
 #define C "\33[1;36m"        //        Cyan
 #define W "\33[1;37m"        //        White
 
+/* write fonction macro */
+#define DEBUG_MODE 0
+
+/*		Philo Status    */
+typedef enum e_status
+{
+	EATING,
+	SLEEPING,
+	THINKING,
+	TAKE_FIRST_FORK,
+	TAKE_SECONDE_FORK,
+	DIED,
+}			t_philo_status;
+
 /*
    OPCODE for mutex || thread fonction
 */
@@ -49,6 +74,14 @@ typedef enum e_opcode
     DETACH,
 }           t_opcode;
 
+/* code for get time */
+typedef enum e_time
+{
+	SECOND,
+	MILLISECONDS,
+	MICROSECONDE,
+}			t_time_code;
+
 typedef struct s_fork
 {
     t_mutex fork;
@@ -62,8 +95,10 @@ typedef struct s_philospher
     long meals_cnt;
     bool full;
     long last_meal_time; // temps passer depuis le dernier repas ⏱️
-    t_fork *left_fork;
-    t_fork *righ_fork;
+    // t_fork *left_fork;
+    // t_fork *righ_fork;
+	t_fork *first_fork;
+    t_fork *second_fork;
     pthread_t thread_id; // un philo est un thread
     t_table *table;
 }               t_philospher;
@@ -79,17 +114,39 @@ typedef struct s_table
     long    nbr_limit_meal; // [5] |flag if -1
     long    start_simulation; // ⏱️
     bool    end_simaltions; // un philo meurt 💀 ou que tout les philo sont full 🍝
+	bool 	all_thread_ready; // synchro philo
+	t_mutex table_mutex; // avoid race wile reading from table
+	t_mutex write_mutex;
     t_fork *fork;
     t_philospher *philos;
 }               t_table;
 
+//			utils
 void    error_exit(const char *error);
 void parse_input(t_table *table, char **av);
 
 //          safe fonction
 void *safe_malloc(size_t bytes);
-void    safe_mutex(t_mutex *mutex, t_opcode opcode);
+void    safe_mutex_handle(t_mutex *mutex, t_opcode opcode);
 void    safe_thread_handle(t_mutex *thread, void *(*foo)(void *), void *data, t_opcode opcode);
 
+//			init
+void data_init(t_table *table);
+
+//			synchro utils 
+void	wait_all_thread(t_table *table);
+
+// 		set and get, very useful to write DRY(limpide) code
+void	set_bool(t_mutex *mutex, bool *dest, bool value);
+bool	get_bool(t_mutex *mutex, bool *value);
+long get_long(t_mutex *mutex, long *value);
+void	set_long(t_mutex *mutex, long *dest, long value);
+
+long get_time(t_time_code *time_code);
+void	precise_usleep(long usec, t_table *table);
+
+bool	simulation_finish(t_table *table);
+
+void	write_status(t_philo_status status, t_philospher *philo, bool debug);
 
 #endif

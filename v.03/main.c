@@ -1,4 +1,15 @@
-// header
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: thobenel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/30 14:07:18 by thobenel          #+#    #+#             */
+/*   Updated: 2024/10/30 14:07:20 by thobenel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "philo.h"
 
@@ -16,11 +27,11 @@ int main(int ac, char **av)
         // 1) Error checking, filling table table
         parse_input(&table);  // done 
         // 2) Creating the actual think
-        data_init(&table); // todo
+        data_init(&table); // done
         // 3) 
         dinner_start(&table); // todo
         // 4) No leaks -> philo full || 1 philo die 💀
-        clean_up(&table);
+        clean_up(&table); // todo
     }
     else
     {
