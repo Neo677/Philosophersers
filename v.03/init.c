@@ -4,7 +4,15 @@
 
 static void ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
 {
-     
+    int philo_nbrs;
+
+    philo_nbrs = philo->table->philo_nbr;
+
+    // == positions
+    philo->righ_fork = forks(position);
+    //      dead_lock
+    philo->left_fork = fork[(position + 1) % philo_nbrs];
+    
 }
 
 static void philo_init(t_table *table)
