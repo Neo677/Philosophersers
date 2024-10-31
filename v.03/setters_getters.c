@@ -42,8 +42,9 @@ long get_long(t_mutex *mutex, long *value)
 	long res;
 
 	safe_mutex_handle(mutex, LOCK);
-	res = value;
+	res = *value;
 	safe_mutex_handle(mutex, UNLOCK);
+	return (res);
 }
 
 void	set_long(t_mutex *mutex, long *dest, long value)
@@ -59,5 +60,5 @@ void	set_long(t_mutex *mutex, long *dest, long value)
 
 bool	simulation_finish(t_table *table)
 {
-	return (get_bool(table->table_mutex, &table->end_simaltions));
+	return (get_bool(&table->table_mutex, &table->end_simaltions));
 }

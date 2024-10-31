@@ -21,14 +21,14 @@ static void	ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
 
 	philo_nbrs = philo->table->philo_nbr;
 	// == positions
-	philo->first_fork = forks(position);
+	philo->first_fork = &forks[(position + 1) & philo_nbrs];
 	//      dead_lock
-	philo->second_fork = fork[(position + 1) % philo_nbrs];
+	philo->second_fork = &forks[(position)];
 	if (philo->id % 2)
 	{
-		philo->first_fork = forks(position);
+		philo->first_fork = &forks[position];
 		//      dead_lock
-		philo->second_fork = fork[(position + 1) % philo_nbrs];
+		philo->second_fork = &forks[(position + 1) % philo_nbrs];
 	}
 }
 
@@ -59,14 +59,15 @@ void	data_init(t_table *table)
 	i = -1;
 	table->end_simaltions = false;
 	table->all_thread_ready = false;
+	table->thread_running_nbr = 0;
 	table->philos = safe_malloc(sizeof(t_philospher) * table->philo_nbr);
+	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
 	safe_mutex_handle(&table->table_mutex, INIT);
 	safe_mutex_handle(&table->write_mutex, INIT);
-	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
 	while (++i < table->philo_nbr)
 	{
-		safe_mutex(table->fork[i].fork, INIT);
+		safe_mutex_handle(&table->fork[i].fork, INIT);
 		table->fork[i].fork_id = i; // super pour debug
 	}
-	philo_init(table); // todo
+	philo_init(table); // done
 }

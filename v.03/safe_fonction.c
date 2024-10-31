@@ -24,7 +24,7 @@ void *safe_malloc(size_t bytes)
     void    *res;
 
     res = malloc(bytes);
-    if (res ==  NULL)
+    if (res == NULL)
         error_exit("Error with the malloc");
     return (res);
 }
@@ -97,7 +97,7 @@ static void handle_thread_error(int status, t_opcode opcode)
 	 wrapper fonction    ptr to thread data type / ptr to fonction / ptr to data / ptr opcode struct  
 */                          
 //      
-void    safe_thread_handle(t_mutex *thread, void *(*foo)(void *), void *data, t_opcode opcode)
+void    safe_thread_handle(pthread_t *thread, void *(*foo)(void *), void *data, t_opcode opcode)
 {
     if (opcode == CREATE)
         handle_thread_error(pthread_create(thread, NULL, foo, data), opcode);

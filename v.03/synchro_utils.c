@@ -16,5 +16,26 @@
 
 void	wait_all_thread(t_table *table)
 {
-	while (!get_bool(&table->table_mutex, &table->all_thread_ready))
+	while (!get_bool(&table->table_mutex, &table->all_thread_ready));
+}
+
+// Monitor busy wait untill all thread are bot running 
+
+bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
+{
+	bool res;
+
+	res = false;
+	safe_mutex_handle(mutex, LOCK);
+	if (*threads == philo_nbr)
+		res = true;
+	safe_mutex_handle(mutex, UNLOCK);
+	return (res);
+}
+// increase thread runnning, to synchronise with the monitor 
+void	increase_long(t_mutex *mutex, long *value)
+{
+	safe_mutex_handle(mutex, LOCK);
+	(*value)++;
+	safe_mutex_handle(mutex, UNLOCK);
 }

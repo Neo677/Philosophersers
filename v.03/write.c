@@ -12,13 +12,12 @@
 
 #include "philo.h"
 
-
 /*
 	same as write, just with more info helping when debugging
 */
 static void	write_status_debug(t_philo_status status, t_philospher *philo, long elapsed)
 {
-	if (TAKE_FIRST_FORK == satus && !simulation_finish(philo->table))
+	if (TAKE_FIRST_FORK == status && !simulation_finish(philo->table))
 		printf(W "%6ld" RST " %d has taken the 1-first fork  " "\t\t\tn°" B "[  🍝 %d 🍝  ]\n" RST, elapsed, philo->id, philo->first_fork->fork_id);
 	else if (TAKE_SECONDE_FORK == status && !simulation_finish(philo->table))
 		printf(W "%6ld" RST " %d has taken the 2-first fork  " "\t\t\tn°" B "[  🍝 %d 🍝  ]\n" RST, elapsed, philo->id, philo->second_fork->fork_id);
@@ -51,7 +50,7 @@ void	write_status(t_philo_status status, t_philospher *philo, bool debug)
 {
 	long elapsed;
 
-	elapsed = get_time(MILLISECONDS) - philo->table->start_simulation;
+	elapsed = getime(MILLISECONDS) - philo->table->start_simulation;
 
 	if (philo->full) // T
 		return ;
@@ -79,3 +78,4 @@ void	write_status(t_philo_status status, t_philospher *philo, bool debug)
 	// unlock
 	safe_mutex_handle(&philo->table->write_mutex, UNLOCK);
 }
+
