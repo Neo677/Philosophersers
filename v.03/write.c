@@ -24,13 +24,13 @@ static void	write_status_debug(t_philo_status status, t_philospher *philo, long 
 	else if (EATING == status && !simulation_finish(philo->table))
 		printf(W "%6ld" C " %d his eating" "\t\t\t" Y "[  🍝   %ld  🍝  ]\n" RST, elapsed, philo->id, philo->meals_cnt);
 	else if (SLEEPING == status && !simulation_finish(philo->table))
-		printf(W"%6ld"RST" &d is sleeping   😴  leave him some intimitate !\n", elapsed, philo->id);
+		printf(W"%6ld"RST" %d is sleeping   😴  leave him some intimitate !\n", elapsed, philo->id);
 	else if (THINKING == status && !simulation_finish(philo->table))
-		printf(W"%6ld"RST" &d is thinking 🤔 \n", elapsed, philo->id);
+		printf(W"%6ld"RST" %d is thinking \n", elapsed, philo->id);
 	else if (DIED == status)
 		printf(RED"\t\t 💀 %6ld %d died 💀 \n"RST, elapsed, philo->id);
 }
-
+//printf(W"%6ld"RST" &d is thinking 🤔 \n", elapsed, philo->id);
 
 /* theory
 	[time_ms] [philo_id] [action]
@@ -46,6 +46,8 @@ static void	write_status_debug(t_philo_status status, t_philospher *philo, long 
 	(emoji locker) table lock to read if end_simalutions
 */
 
+
+
 void	write_status(t_philo_status status, t_philospher *philo, bool debug)
 {
 	long elapsed;
@@ -54,6 +56,8 @@ void	write_status(t_philo_status status, t_philospher *philo, bool debug)
 
 	if (philo->full) // T
 		return ;
+	
+
 	
 	// locker
 	safe_mutex_handle(&philo->table->write_mutex, LOCK);
@@ -64,13 +68,13 @@ void	write_status(t_philo_status status, t_philospher *philo, bool debug)
 	{
 
 		if (((TAKE_FIRST_FORK == status) || (TAKE_SECONDE_FORK == status)) && !simulation_finish(philo->table))
-			printf(W"%-6ld"RST" %d has taken a fork 🍴 \n", elapsed, philo->id);
+			printf(W"%6ld"RST" %d has taken a fork 🍴 \n", elapsed, philo->id);
 		else if (EATING == status && !simulation_finish(philo->table))
-			printf(W"%-6ld"C"[  🍝  %d his eating ! 🍝  ] \n"RST, elapsed, philo->id);
+			printf(W"%6ld"C"[  🍝  %d his eating ! 🍝  ] \n"RST, elapsed, philo->id);
 		else if (SLEEPING == status && !simulation_finish(philo->table))
-			printf(W"%-6ld"RST" %d his sleeping 😴 leave him some intimitate ! \n", elapsed, philo->id);
+			printf(W"%6ld"RST" %d his sleeping 😴 leave him some intimitate ! \n", elapsed, philo->id);
 		else if (THINKING == status && !simulation_finish(philo->table))
-			printf(W"%-6ld"RST"[ 🤔 %d his thinking ! 🤔 ]\n", elapsed, philo->id);
+			printf(W"%6ld"RST"[ 🤔 %d his thinking ! 🤔 ]\n", elapsed, philo->id);
 		else if (DIED == status)
 			printf(RED"%-6ld  [💀  %d died 💀 ]\n"RST, elapsed, philo->id);
 	}

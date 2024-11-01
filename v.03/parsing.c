@@ -13,14 +13,14 @@
 
 #include "philo.h"
 
-static inline is_digit(char c)
+static int is_digit(char c)
 {
     return (c >= '0' && c <= '9');
 }
 
-
+// inline ????
 // check man
-static inline is_space(char c)
+static int is_space(char c)
 {
     return ((c >= 9 && c <= 13 ) || c == 32);
 }
@@ -96,5 +96,5 @@ void parse_input(t_table *table, char **av)
         table->nbr_limit_meal = ft_atol(av[5]);
     else
         table->nbr_limit_meal = -1;
-    
+    printf(Y"the parsing from the input is done\n"RST);
 }

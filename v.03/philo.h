@@ -89,8 +89,10 @@ typedef struct s_fork
     t_mutex fork;
     int fork_id;
 }               t_fork;
+
 //          structure
 typedef struct s_table t_table;
+
 
 typedef struct s_philospher
 {
@@ -147,17 +149,18 @@ void	wait_all_thread(t_table *table);
 // 		set and get, very useful to write DRY(limpide) code
 void	set_bool(t_mutex *mutex, bool *dest, bool value);
 bool	get_bool(t_mutex *mutex, bool *value);
-long get_long(t_mutex *mutex, long *value);
+long 	get_long(t_mutex *mutex, long *value);
 void	set_long(t_mutex *mutex, long *dest, long value);
 
 long getime(t_time_code time_code);
-void	precise_usleep(long usec, t_philospher *philo);
+void	precise_usleep(long usec, t_table *table);
 
 bool	simulation_finish(t_table *table);
 
 void	write_status(t_philo_status status, t_philospher *philo, bool debug);
 
 void	dinner_start(t_table *table);
+void	*dinner_simulation(void *data);
 
 void	wait_all_thread(t_table *table);
 
@@ -165,9 +168,13 @@ bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr);
 
 void	increase_long(t_mutex *mutex, long *value);
 
+void	*alone_philo(void *arg);
 
-// monitor 
-static bool philo_died(t_philospher *philo)
-void	*monitor_dinner(void *data)
+
+// monitor
+void	*monitor_dinner(void *data);
+
+void clean_up(t_table *table);
+
 
 #endif

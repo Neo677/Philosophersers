@@ -21,7 +21,7 @@ static void	ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
 
 	philo_nbrs = philo->table->philo_nbr;
 	// == positions
-	philo->first_fork = &forks[(position + 1) & philo_nbrs];
+	philo->first_fork = &forks[(position + 1) % philo_nbrs];
 	//      dead_lock
 	philo->second_fork = &forks[(position)];
 	if (philo->id % 2)
@@ -61,8 +61,8 @@ void	data_init(t_table *table)
 	table->all_thread_ready = false;
 	table->thread_running_nbr = 0;
 	table->philos = safe_malloc(sizeof(t_philospher) * table->philo_nbr);
-	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
 	safe_mutex_handle(&table->table_mutex, INIT);
+	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
 	safe_mutex_handle(&table->write_mutex, INIT);
 	while (++i < table->philo_nbr)
 	{

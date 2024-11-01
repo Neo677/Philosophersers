@@ -16,7 +16,8 @@
 
 void	wait_all_thread(t_table *table)
 {
-	while (!get_bool(&table->table_mutex, &table->all_thread_ready));
+	while (!get_bool(&table->table_mutex, &table->all_thread_ready))
+		usleep(100);
 }
 
 // Monitor busy wait untill all thread are bot running 
@@ -30,6 +31,8 @@ bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
 	if (*threads == philo_nbr)
 		res = true;
 	safe_mutex_handle(mutex, UNLOCK);
+	// garantit qu’aucune autre fonction ne modifie *threads pendant la vérification, évitant ainsi les data races.
+
 	return (res);
 }
 // increase thread runnning, to synchronise with the monitor 

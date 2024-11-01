@@ -24,14 +24,18 @@ int main(int ac, char **av)
     if (ac == 5 || ac == 6)
     {   
         // correct input
+		
         // 1) Error checking, filling table table
-        parse_input(&table, av);  // done 
+        parse_input(&table, av);  // done
+		
         // 2) Creating the actual think
         data_init(&table); // done
+		
         // 3) 
-        dinner_start(&table); // todo
+        dinner_start(&table); // done
+		
         // 4) No leaks -> philo full || 1 philo die 💀
-        // clean_up(&table); // todo
+        clean_up(&table); // todo
     }
     else
     {
