@@ -12,6 +12,26 @@
 
 #include "philo.h"
 
+/*
+	same algo but...
+	1) fake lock the fork
+	2) sleep until the monitor will bust it
+*/
+void	*alone_philo(void *arg)
+{
+	t_philospher *philo;
+
+	philo = (t_philospher *)arg;
+	wait_all_thread(philo->table);
+	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
+	write_status(TAKE_FIRST_FORK, philo, DEBUG_MODE);
+	while(!simulation_finish(philo->table))
+		usleep(200);
+	return (NULL);
+	
+
+}
+
 
 // 				TODO finished
 static void thinking(t_philospher *philo)
@@ -66,6 +86,9 @@ void	*dinner_simulation(void *data)
 	//	spinlock
 	wait_all_thread(philo->table); // todo
 
+	// set time last meal
+	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
+
 	// synchro with monitor 
 	// increase a table variable counter, with all threads running 
 	// todo
@@ -117,13 +140,13 @@ void	dinner_start(t_table *table)
 	if (table->nbr_limit_meal == 0)
 		return ; // back to main, clean
 	else if (table->philo_nbr == 1)
-		; // todo
+		safe_thread_handle(table->philos[0].thread_id, alone_philo, &philo->philos[0], CREATE); // todo
 	else
 	{
 		while (++i < table->philo_nbr)
 			safe_thread_handle(&table->philos[i].thread_id, dinner_simulation, &table->philos[i], CREATE);
 	}
-	// monitor (emoji dead)
+	// monitor (💀)
 										// todo
 	safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
 

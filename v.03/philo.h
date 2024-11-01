@@ -100,7 +100,7 @@ typedef struct s_philospher
     long last_meal_time; // temps passer depuis le dernier repas ⏱️
     // t_fork *left_fork;
     // t_fork *righ_fork;
-	t_fork *first_fork;
+	t_fork *first_fork; // ODD EVEN assignement
     t_fork *second_fork;
     pthread_t thread_id; // un philo est un thread
     t_mutex philo_mutex; // useful for races with the monitor
@@ -158,5 +158,16 @@ bool	simulation_finish(t_table *table);
 void	write_status(t_philo_status status, t_philospher *philo, bool debug);
 
 void	dinner_start(t_table *table);
+
+void	wait_all_thread(t_table *table);
+
+bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr);
+
+void	increase_long(t_mutex *mutex, long *value);
+
+
+// monitor 
+static bool philo_died(t_philospher *philo)
+void	*monitor_dinner(void *data)
 
 #endif
