@@ -147,7 +147,7 @@ void data_init(t_table *table);
 void	wait_all_thread(t_table *table);
 
 // 		set and get, very useful to write DRY(limpide) code
-void	set_bool(t_mutex *mutex, bool *dest, bool value);
+void	set_bool(t_mutex *mutex, bool *value, bool new_value);
 bool	get_bool(t_mutex *mutex, bool *value);
 long 	get_long(t_mutex *mutex, long *value);
 void	set_long(t_mutex *mutex, long *dest, long value);

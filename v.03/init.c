@@ -37,11 +37,11 @@ static void	philo_init(t_table *table)
 	int				i;
 	t_philospher	*philo;
 
-	i = -1;
-	while (++i < table->philo_nbr)
+	i = 0;
+	while (i < table->philo_nbr)
 	{
 		philo = table->philos + i;
-		philo->id = i + 1;
+		philo->id = i;
 		philo->full = false;
 		philo->meals_cnt = 0;
 		philo->table = table;
@@ -49,6 +49,7 @@ static void	philo_init(t_table *table)
 		
 		// AD hoc 		i position in the table
 		ft_assign_fork(philo, table->fork, i);
+		i++;
 	}
 }
 
@@ -61,13 +62,16 @@ void	data_init(t_table *table)
 	table->all_thread_ready = false;
 	table->thread_running_nbr = 0;
 	table->philos = safe_malloc(sizeof(t_philospher) * table->philo_nbr);
+	printf("Allocated memory for %ld philosophers\n", table->philo_nbr);
 	safe_mutex_handle(&table->table_mutex, INIT);
 	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
+	printf("Allocated memory for %ld philosophers\n", table->philo_nbr);
 	safe_mutex_handle(&table->write_mutex, INIT);
 	while (++i < table->philo_nbr)
 	{
 		safe_mutex_handle(&table->fork[i].fork, INIT);
 		table->fork[i].fork_id = i; // super pour debug
+		printf(Y"Initialize fork %d\n"RST, i);
 	}
 	philo_init(table); // done
 }

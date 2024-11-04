@@ -12,6 +12,26 @@
 
 #include "philo.h"
 
+// Function to safely get a boolean value with mutex protection
+bool	get_bool(t_mutex *mutex, bool *value)
+{
+	bool res;
+
+	safe_mutex_handle(mutex, LOCK);
+	res = *value;
+	safe_mutex_handle(mutex, UNLOCK);
+
+	return (res);
+}
+
+// Function to safely set a boolean value with mutex protection
+void	set_bool(t_mutex *mutex, bool *value, bool new_value)
+{
+	safe_mutex_handle(mutex, LOCK);
+	*value = new_value;
+	safe_mutex_handle(mutex, UNLOCK);
+}
+
 /* SPINLOCK to synchronize philos start */
 
 void	wait_all_thread(t_table *table)
@@ -20,7 +40,7 @@ void	wait_all_thread(t_table *table)
 		usleep(100);
 }
 
-// Monitor busy wait untill all thread are bot running 
+// Monitor busy wait until all threads are running 
 
 bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
 {
@@ -31,14 +51,16 @@ bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
 	if (*threads == philo_nbr)
 		res = true;
 	safe_mutex_handle(mutex, UNLOCK);
-	// garantit qu’aucune autre fonction ne modifie *threads pendant la vérification, évitant ainsi les data races.
+	// Guarantees that no other function modifies *threads during the check, thus avoiding data races.
 
 	return (res);
 }
-// increase thread runnning, to synchronise with the monitor 
+
+// Increase thread running count to synchronize with the monitor 
 void	increase_long(t_mutex *mutex, long *value)
 {
 	safe_mutex_handle(mutex, LOCK);
 	(*value)++;
 	safe_mutex_handle(mutex, UNLOCK);
 }
+
