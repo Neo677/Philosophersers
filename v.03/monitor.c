@@ -24,9 +24,10 @@ static bool philo_died(t_philospher *philo)
 	if (get_bool(&philo->philo_mutex, &philo->full))
 		return(false);
 	elapsed = getime(MILLISECONDS) - get_long(&philo->philo_mutex, &philo->last_meal_time);
+	
 	time_to_die_bitch = philo->table->time_to_die / 1e3;
 
-	if ( elapsed > time_to_die_bitch)
+	if (elapsed > time_to_die_bitch)
 		return (true);
 	return (elapsed > time_to_die_bitch);
 }
@@ -51,11 +52,11 @@ void	*monitor_dinner(void *data)
 			if (philo_died(table->philos + i)) // done
 			{
 				set_bool(&table->table_mutex, &table->end_simaltions, true);
-				write_status(DIED, table->philos + i, DEBUG_MODE);
+				write_status(DIED, table->philos + i, true);
 				break;
 			}
 		}
-		usleep(1000);
+		//usleep(1000);
 	}
 	return (NULL);
 }

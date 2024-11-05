@@ -13,9 +13,16 @@
 
 #include "philo.h"
 
+
 // the main is a TL;DR of the program
 
 // input = ./philo 5 800 200 200 [5]
+
+
+/*
+	add the fonction for philo_nbr if its odd (impair)
+	or if its even(pair) it lauche the classic dinner launch
+*/
 
 int main(int ac, char **av)
 {

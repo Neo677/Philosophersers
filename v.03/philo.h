@@ -152,7 +152,9 @@ bool	get_bool(t_mutex *mutex, bool *value);
 long 	get_long(t_mutex *mutex, long *value);
 void	set_long(t_mutex *mutex, long *dest, long value);
 
+//long getime(t_time_code time_code);
 long getime(t_time_code time_code);
+
 void	precise_usleep(long usec, t_table *table);
 
 bool	simulation_finish(t_table *table);
@@ -175,6 +177,5 @@ void	*alone_philo(void *arg);
 void	*monitor_dinner(void *data);
 
 void clean_up(t_table *table);
-
 
 #endif

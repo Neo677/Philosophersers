@@ -26,7 +26,7 @@ void	*alone_philo(void *arg)
 	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
 	write_status(TAKE_FIRST_FORK, philo, DEBUG_MODE);
 	while(!simulation_finish(philo->table))
-		usleep(200);
+		;
 	return (NULL);
 }
 
@@ -43,75 +43,76 @@ static void thinking(t_philospher *philo)
 	2) eat : write eat, update last meal, update meal counter, eventually bool full
 	3) release the forks
 */
-
 static void eat(t_philospher *philo)
 {
-	// 1)
+// 1)
+	// 1) take the first fork.
 	safe_mutex_handle(&philo->first_fork->fork, LOCK);
-	write_status(TAKE_FIRST_FORK, philo, DEBUG_MODE);
+	write_status(TAKE_FIRST_FORK, philo, true);
+	// 2) take the second fork.
 	safe_mutex_handle(&philo->second_fork->fork, LOCK);
-	write_status(TAKE_SECONDE_FORK, philo, DEBUG_MODE);
+	write_status(TAKE_SECONDE_FORK, philo, true);
 
-	// 2)
+// 2)
 	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
 	philo->meals_cnt++;
-	write_status(EATING, philo, DEBUG_MODE);
+	write_status(EATING, philo, true);
 	precise_usleep(philo->table->time_to_eat, philo->table);
+	//usleep(philo->table->time_to_eat);
 	if (philo->table->nbr_limit_meal > 0 && philo->meals_cnt == philo->table->nbr_limit_meal)
 	{
 		set_bool(&philo->philo_mutex, &philo->full, true);
 	}
-	// 3)
+// 3)
 	safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
 	safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
 }
 
 
 /*
-	0) wait all phil, synchro start
-
-	1) endlesthinkings loop philo
+	1) wait all philo, and synchro start
+	2) endlees thinkings loop philo
 */
 
-void	*dinner_simulation(void *data)
+void *dinner_simulation(void *data)
 {
 	t_philospher *philo;
 
 	philo = (t_philospher *)data;
 
-	//	spinlock
-	wait_all_thread(philo->table); // todo
+	// spinlock
+	wait_all_thread(philo->table);
 
 	// set time last meal
 	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
 
-	// synchro with monitor 
-	// increase a table variable counter, with all threads running 
-	// todo
+	// synchro with monitor
+	// increase a table variable counter, with all threads running
 	increase_long(&philo->table->table_mutex, &philo->table->thread_running_nbr);
 
 	// set last meal time ??
 
-
 	while (!simulation_finish(philo->table))
 	{
-		// 1) am i full ? 
+		// 1) am i full ?
 		if (philo->full) // todo thread safe ?
 			break;
-			
+		else
+			printf("The philo aren't full...\n");
+
 		// 2) eat
 		eat(philo);
 
 		// 3) sleep  ->  write_status & precise usleep  ✅
 		write_status(SLEEPING, philo, DEBUG_MODE);
 		precise_usleep(philo->table->time_to_sleep, philo->table);
-		
+		// usleep(philo->table->time_to_sleep);
+		printf("%-d im awake \n", philo->id);
 		// 4) think
 		thinking(philo); // todo
-		
 	}
 
-	return (NULL);
+	return NULL;
 }
 
 /*
@@ -143,22 +144,25 @@ void	dinner_start(t_table *table)
 			safe_thread_handle(&table->philos[i].thread_id, dinner_simulation, &table->philos[i], CREATE);
 	}
 	// monitor (💀)
-										// done
 	safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
 
 	// start of simulations
 	table->start_simulation = getime(MILLISECONDS);
 
-
 	// now all the thread are ready !
 	set_bool(&table->table_mutex, &table->all_thread_ready, true);
 
-	//	Wait for everyone 
+	// Wait for everyone 
 	i = -1;
 	while(++i < table->philo_nbr)
 		safe_thread_handle(&table->philos[i].thread_id, NULL, NULL, JOIN);
 
 	// if we manage to reach this line, all philo are full
 	set_bool(&table->table_mutex, &table->end_simaltions, true);
-
 }
+
+
+/*
+	Need to implement a fonction that check if the phil_nbr is odd or even if its odd (impair) and 
+	implemenet the routine eat think sleep on this we keep the same system that we already got
+*/

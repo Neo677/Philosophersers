@@ -97,4 +97,5 @@ void parse_input(t_table *table, char **av)
     else
         table->nbr_limit_meal = -1;
     printf(Y"the parsing from the input is done\n"RST);
+	//printf(Y"%ld", table->)
 }

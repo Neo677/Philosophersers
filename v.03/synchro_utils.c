@@ -12,32 +12,12 @@
 
 #include "philo.h"
 
-// Function to safely get a boolean value with mutex protection
-bool	get_bool(t_mutex *mutex, bool *value)
-{
-	bool res;
-
-	safe_mutex_handle(mutex, LOCK);
-	res = *value;
-	safe_mutex_handle(mutex, UNLOCK);
-
-	return (res);
-}
-
-// Function to safely set a boolean value with mutex protection
-void	set_bool(t_mutex *mutex, bool *value, bool new_value)
-{
-	safe_mutex_handle(mutex, LOCK);
-	*value = new_value;
-	safe_mutex_handle(mutex, UNLOCK);
-}
-
 /* SPINLOCK to synchronize philos start */
 
 void	wait_all_thread(t_table *table)
 {
 	while (!get_bool(&table->table_mutex, &table->all_thread_ready))
-		usleep(100);
+		;
 }
 
 // Monitor busy wait until all threads are running 

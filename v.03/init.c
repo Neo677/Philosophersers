@@ -12,46 +12,57 @@
 
 #include "philo.h"
 
+static void assign_forks(t_philospher *philosopher, t_fork *forks, int philo_nbr) 
+{
+    if (philosopher->id % 2 == 0) 
+	{
+        philosopher->first_fork = &forks[philosopher->id];
+        philosopher->second_fork = &forks[(philosopher->id + 1) % philo_nbr];
+    }
+	else 
+	{
+        philosopher->first_fork = &forks[(philosopher->id + 1) % philo_nbr];
+        philosopher->second_fork = &forks[philosopher->id];
+    }
+}
+
 /*
 	EVEN ODD fork assignement
 */
-static void	ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
-{
-	int	philo_nbrs;
+// static void	ft_assign_fork(t_philospher *philo, t_fork *forks, int position)
+// {
+// 	int	philo_nbrs;
 
-	philo_nbrs = philo->table->philo_nbr;
-	// == positions
-	philo->first_fork = &forks[(position + 1) % philo_nbrs];
-	//      dead_lock
-	philo->second_fork = &forks[(position)];
-	if (philo->id % 2)
-	{
-		philo->first_fork = &forks[position];
-		//      dead_lock
-		philo->second_fork = &forks[(position + 1) % philo_nbrs];
-	}
-}
+// 	philo_nbrs = philo->table->philo_nbr;
+// 	// == positions
+// 	philo->first_fork = &forks[(position + 1) % philo_nbrs];
+// 	//      dead_lock
+// 	philo->second_fork = &forks[(position)];
+// 	if (philo->id % 2)
+// 	{
+// 		philo->first_fork = &forks[position];
+// 		//      dead_lock
+// 		philo->second_fork = &forks[(position + 1) % philo_nbrs];
+// 	}
+// }
 
-static void	philo_init(t_table *table)
+void philo_init(t_table *table) 
 {
-	int				i;
-	t_philospher	*philo;
+	int i;
 
 	i = 0;
-	while (i < table->philo_nbr)
+    while (i < table->philo_nbr)
 	{
-		philo = table->philos + i;
-		philo->id = i;
-		philo->full = false;
-		philo->meals_cnt = 0;
-		philo->table = table;
-		safe_mutex_handle(&philo->philo_mutex, INIT);
-		
-		// AD hoc 		i position in the table
-		ft_assign_fork(philo, table->fork, i);
+        table->philos[i].id = i;
+        table->philos[i].meals_cnt = 0;
+        table->philos[i].full = false;
+        table->philos[i].last_meal_time = 0;
+        table->philos[i].table = table;
+        assign_forks(&table->philos[i], table->fork, table->philo_nbr);
 		i++;
 	}
 }
+
 
 void	data_init(t_table *table)
 {
@@ -65,7 +76,7 @@ void	data_init(t_table *table)
 	printf("Allocated memory for %ld philosophers\n", table->philo_nbr);
 	safe_mutex_handle(&table->table_mutex, INIT);
 	table->fork = safe_malloc(sizeof(t_fork) * table->philo_nbr);
-	printf("Allocated memory for %ld philosophers\n", table->philo_nbr);
+	//printf("the fork as been asign = %d\n", table->fork->fork_id);
 	safe_mutex_handle(&table->write_mutex, INIT);
 	while (++i < table->philo_nbr)
 	{
@@ -73,5 +84,6 @@ void	data_init(t_table *table)
 		table->fork[i].fork_id = i; // super pour debug
 		printf(Y"Initialize fork %d\n"RST, i);
 	}
+	printf(Y"im done for assign the data i start to assign fork\n"RST);
 	philo_init(table); // done
 }

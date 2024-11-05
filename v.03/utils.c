@@ -39,6 +39,7 @@ void clean_up(t_table *table)
 
 	time_code -> SECOND / MILLISECONDS / MICROSECONDE
 */
+
 long getime(t_time_code time_code)
 {
 	struct timeval tv;
@@ -61,7 +62,8 @@ long getime(t_time_code time_code)
 	why table ???	is the simlation finishied ?
 	1) usleep the majority of time, not CPU intensive 
 	2) refine last microsec whith spinlock
- */
+*/
+
 void precise_usleep(long usec, t_table *table)
 {
 	long start;
@@ -74,7 +76,7 @@ void precise_usleep(long usec, t_table *table)
 		// 1) Check if the simulation is finished
 		if (simulation_finish(table))
 			break;
-		
+
 		elapsed = getime(MICROSECONDE) - start;
 		rem = usec - elapsed;
 
@@ -83,7 +85,7 @@ void precise_usleep(long usec, t_table *table)
 			usleep(rem / 2);
 		else
 		{
-			// SPIN-LOCK
+			// SPIN---LOCK
 			while (getime(MICROSECONDE) - start < usec)
 				;
 		}
