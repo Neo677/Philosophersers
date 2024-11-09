@@ -31,6 +31,12 @@ void	*alone_philo(void *arg)
 }
 
 
+void sleeping(t_philospher *philo)
+{
+    write_status(SLEEPING, philo, true);  // Indique que le philosophe est en train de dormir
+    precise_usleep(philo->table->time_to_sleep, philo->table);  // Délai de sommeil
+}
+
 // 				TODO finished
 static void thinking(t_philospher *philo)
 {
@@ -45,38 +51,65 @@ static void thinking(t_philospher *philo)
 */
 static void eat(t_philospher *philo)
 {
-// 1)
-	// 1) take the first fork.
-	safe_mutex_handle(&philo->first_fork->fork, LOCK);
-	write_status(TAKE_FIRST_FORK, philo, true);
-	// 2) take the second fork.
-	safe_mutex_handle(&philo->second_fork->fork, LOCK);
-	write_status(TAKE_SECONDE_FORK, philo, true);
+    long meals;
 
-// 2)
-	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
-	philo->meals_cnt++;
-	write_status(EATING, philo, true);
-	precise_usleep(philo->table->time_to_eat, philo->table);
-	//usleep(philo->table->time_to_eat);
-	if (philo->table->nbr_limit_meal > 0 && philo->meals_cnt == philo->table->nbr_limit_meal)
-	{
-		set_bool(&philo->philo_mutex, &philo->full, true);
-	}
-// 3)
-	safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
-	safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
+    // Prendre les fourchettes
+    safe_mutex_handle(&philo->first_fork->fork, LOCK);
+    write_status(TAKE_FIRST_FORK, philo, true);
+    safe_mutex_handle(&philo->second_fork->fork, LOCK);
+    write_status(TAKE_SECOND_FORK, philo, true);
+
+    // Mettre à jour le temps du dernier repas
+    set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
+
+    // Manger
+    write_status(EATING, philo, true);
+    precise_usleep(philo->table->time_to_eat, philo->table);
+
+    // Mettre à jour le nombre de repas
+    increase_long(&philo->philo_mutex, &philo->meals_cnt);
+    if (philo->table->nbr_limit_meal > 0)
+    {
+        meals = get_long(&philo->philo_mutex, &philo->meals_cnt);
+        if (meals >= philo->table->nbr_limit_meal)
+            set_bool(&philo->philo_mutex, &philo->full, true);
+    }
+
+    // Relâcher les fourchettes
+    safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
+    safe_mutex_handle(&philo->second_fork->fork, UNLOCK);
 }
 
+void	*philo_life(void *arg)
+{
+    t_philospher *philo = (t_philospher *)arg;
+
+    printf("Philosophe %d a démarré sa routine\n", philo->id);
+
+    while (!simulation_finish(philo->table)) {
+        printf("Philosophe %d pense\n", philo->id);
+        thinking(philo);
+        
+        // Temporairement désactivé pour tester
+        // printf("Philosophe %d va manger\n", philo->id);
+        // eat(philo);
+        
+        printf("Philosophe %d va dormir\n", philo->id);
+        sleeping(philo);
+    }
+    
+    printf("Philosophe %d a terminé sa routine\n", philo->id);
+    return (NULL);
+}
 
 /*
 	1) wait all philo, and synchro start
 	2) endlees thinkings loop philo
 */
-
 void *dinner_simulation(void *data)
 {
 	t_philospher *philo;
+	long full_full;
 
 	philo = (t_philospher *)data;
 
@@ -95,16 +128,15 @@ void *dinner_simulation(void *data)
 	while (!simulation_finish(philo->table))
 	{
 		// 1) am i full ?
-		if (philo->full) // todo thread safe ?
+		get_bool(&philo->philo_mutex, &philo->full); // todo thread safe ?
+		if (full_full)
 			break;
-		else
-			printf("The philo aren't full...\n");
 
 		// 2) eat
 		eat(philo);
 
 		// 3) sleep  ->  write_status & precise usleep  ✅
-		write_status(SLEEPING, philo, DEBUG_MODE);
+		write_status(SLEEPING, philo, true);
 		precise_usleep(philo->table->time_to_sleep, philo->table);
 		// usleep(philo->table->time_to_sleep);
 		printf("%-d im awake \n", philo->id);
@@ -129,7 +161,54 @@ void *dinner_simulation(void *data)
 	4) join everyone
 */
 
-void	dinner_start(t_table *table)
+void dinner_start(t_table *table)
+{
+    int i;
+
+    i = -1;
+    if (table->nbr_limit_meal == 0)
+        return;
+    else if (table->philo_nbr == 1) 
+	{
+        printf("Lancement du philosophe seul 😢\n");
+        safe_thread_handle(&table->philos[0].thread_id, alone_philo, &table->philos[0], CREATE);
+    }
+	else 
+	{
+		i = 0;
+        while (i < table->philo_nbr) 
+		{
+            printf("Création du thread pour le philosophe %d\n", i);
+            safe_thread_handle(&table->philos[i].thread_id, philo_life, &table->philos[i], CREATE);
+            printf("Thread du philosophe %d créé avec succès\n", i);
+			i++;
+        }
+    }
+    
+    // Créer un thread pour surveiller la simulation
+    printf("Création du thread de surveillance\n");
+    safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
+    printf("Thread de surveillance créé avec succès\n");
+
+    // Début de la simulation
+    table->start_simulation = getime(MILLISECONDS);
+    set_bool(&table->table_mutex, &table->all_thread_ready, true);
+
+    printf("Début de la simulation\n");
+
+    // Attendre que tous les philosophes terminent leur routine
+    i = -1;
+    while (++i < table->philo_nbr) {
+        printf("Attente de la fin du thread pour le philosophe %d\n", i);
+        safe_thread_handle(&table->philos[i].thread_id, NULL, NULL, JOIN);
+        printf("Thread du philosophe %d terminé\n", i);
+    }
+
+    set_bool(&table->table_mutex, &table->end_simaltions, true);
+    printf("Fin de la simulation\n");
+}
+
+/*void	dinner_start(t_table *table)
 {
 	int i;
 
@@ -159,7 +238,7 @@ void	dinner_start(t_table *table)
 
 	// if we manage to reach this line, all philo are full
 	set_bool(&table->table_mutex, &table->end_simaltions, true);
-}
+}*/
 
 
 /*

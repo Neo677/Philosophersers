@@ -56,7 +56,7 @@ typedef enum e_status
 	SLEEPING,
 	THINKING,
 	TAKE_FIRST_FORK,
-	TAKE_SECONDE_FORK,
+	TAKE_SECOND_FORK,
 	DIED,
 }			t_philo_status;
 
@@ -117,9 +117,10 @@ typedef struct s_table
     long    time_to_die; // ./philo 5 '800'
     long    time_to_eat; // ./philo 5 800 '200' 
     long    time_to_sleep; // ./philo 5 800 200 '200'
+    long    time_to_think;
     long    nbr_limit_meal; // '[5]' |flag if -1
     long    start_simulation; // ⏱️
-    bool    end_simaltions; // un philo meurt 💀 ou que tout les philo sont full 🍝
+    bool    end_simulations; // un philo meurt 💀 ou que tout les philo sont full 🍝
 	bool 	all_thread_ready; // synchro philo
 	long thread_running_nbr;
 	pthread_t monitor; 
@@ -128,8 +129,6 @@ typedef struct s_table
     t_fork *fork;
     t_philospher *philos;
 }               t_table;
-
-
 
 //			utils
 void error_exit(const char *error);
@@ -147,14 +146,12 @@ void data_init(t_table *table);
 void	wait_all_thread(t_table *table);
 
 // 		set and get, very useful to write DRY(limpide) code
-void	set_bool(t_mutex *mutex, bool *value, bool new_value);
+void	set_bool(t_mutex *mutex, bool *dest, bool value);
 bool	get_bool(t_mutex *mutex, bool *value);
 long 	get_long(t_mutex *mutex, long *value);
 void	set_long(t_mutex *mutex, long *dest, long value);
 
-//long getime(t_time_code time_code);
 long getime(t_time_code time_code);
-
 void	precise_usleep(long usec, t_table *table);
 
 bool	simulation_finish(t_table *table);
@@ -162,19 +159,25 @@ bool	simulation_finish(t_table *table);
 void	write_status(t_philo_status status, t_philospher *philo, bool debug);
 
 void	dinner_start(t_table *table);
-
 void	*dinner_simulation(void *data);
 
 void	wait_all_thread(t_table *table);
 
-bool all_thread_running(t_mutex *mutex, long *threads, long philo_nbr);
-
+bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr);
 
 void	increase_long(t_mutex *mutex, long *value);
+
+void	*alone_philo(void *arg);
+
 
 // monitor
 void	*monitor_dinner(void *data);
 
 void clean_up(t_table *table);
+
+bool philo_died(t_philospher *philo);
+
+bool	all_philo_full(t_table *table);
+
 
 #endif

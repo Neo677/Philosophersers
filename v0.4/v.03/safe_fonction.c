@@ -55,7 +55,7 @@ static void handle_mutex_error(int status, t_opcode opcode)
         lock
         unlock
 */
-void safe_mutex_handle(t_mutex *mutex, t_opcode opcode)
+void    safe_mutex_handle(t_mutex *mutex, t_opcode opcode)
 {
     if (opcode == LOCK)
         handle_mutex_error(pthread_mutex_lock(mutex), opcode);
@@ -66,7 +66,7 @@ void safe_mutex_handle(t_mutex *mutex, t_opcode opcode)
     else if (opcode == DESTROY)
         handle_mutex_error(pthread_mutex_destroy(mutex), opcode);
     else
-        error_exit("Action non reconnue pour le mutex\n");
+        error_exit("Wrong opcode for mutex handle");
 }
 
 

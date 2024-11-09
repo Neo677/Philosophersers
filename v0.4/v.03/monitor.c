@@ -16,21 +16,6 @@
 				t_die
 	last meal_______________last meal
 */
-static bool philo_died(t_philospher *philo)
-{
-	long elapsed;
-	long time_to_die_bitch;
-
-	if (get_bool(&philo->philo_mutex, &philo->full))
-		return(false);
-	elapsed = getime(MILLISECONDS) - get_long(&philo->philo_mutex, &philo->last_meal_time);
-	
-	time_to_die_bitch = philo->table->time_to_die / 1e3;
-
-	if (elapsed > time_to_die_bitch)
-		return (true);
-	return (elapsed > time_to_die_bitch);
-}
 
 void *monitor_dinner(void *data)
 {
@@ -44,7 +29,7 @@ void *monitor_dinner(void *data)
     while (!simulation_finish(table))
     {
         // Vérifier si tous les philosophes sont full
-        if (table->nbr_limit_meal > 0 && all_philosophers_full(table))
+        if (table->nbr_limit_meal > 0 && all_philo_full(table))
         {
             set_bool(&table->table_mutex, &table->end_simulations, true);
             break;
@@ -56,6 +41,7 @@ void *monitor_dinner(void *data)
         {
             if (philo_died(&table->philos[i]))
             {
+                // Afficher le message de décès
                 write_status(DIED, &table->philos[i], true);
                 set_bool(&table->table_mutex, &table->end_simulations, true);
                 break;
