@@ -9,7 +9,6 @@
 4 == comprendre le lock et unclock d'un mutex
 
 
-
 Pour faire tout ce beau Merdier :
    
     on va commencer par cree des fonction utilitaire au philosphe pour les faire dormier les faire penser, pour mettre a jours le temps et verifier si l'un d'eux est mort.
@@ -19,3 +18,13 @@ Pour faire tout ce beau Merdier :
 
     continuer sur une fonction pour le timer et mettre a jours chaque philo
 
+Petit update :
+
+
+
+{
+	(1)leak
+	(2) data race
+	(3) norm
+
+}

@@ -70,14 +70,14 @@ void precise_usleep(long usec, t_table *table)
 	long elapsed;
 	long rem;
 
-	start = getime(MICROSECONDE);
-	while (getime(MICROSECONDE) - start < usec)
+	start = getime(MILLISECONDS);
+	while (getime(MILLISECONDS) - start < usec)
 	{
 		// 1) Check if the simulation is finished
 		if (simulation_finish(table))
 			break;
 
-		elapsed = getime(MICROSECONDE) - start;
+		elapsed = getime(MILLISECONDS) - start;
 		rem = usec - elapsed;
 
 		// to get a spinlock threshold
@@ -86,7 +86,7 @@ void precise_usleep(long usec, t_table *table)
 		else
 		{
 			// SPIN---LOCK
-			while (getime(MICROSECONDE) - start < usec)
+			while (getime(MILLISECONDS) - start < usec)
 				;
 		}
 	}

@@ -37,7 +37,7 @@ static void handle_mutex_error(int status, t_opcode opcode)
     if (status == EINVAL && (opcode == LOCK || UNLOCK == opcode)) 
         error_exit("The value specified by mutex is invalid");
     else if (status == EINVAL && opcode == INIT)
-        error_exit("The value specified by attr is invalid");
+        error_exit("The value specified by attribute is invalid");
     else if (status == EDEADLK)
         error_exit("A deadlock would occur if the thread blocked waiting for mutex.");
     else if (status == EPERM)

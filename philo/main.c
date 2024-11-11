@@ -10,36 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philo.h"
 
-// the main is a TL;DR of the program
+/*
+	the main is a too long too read of the program
+	input = ./philo 5 800 200 200 [5]
+	1) check the input == correct input
+	2) Error checking, filling table table
+	3) Creating the actual think
+	4) start the table
+	5) nettoyer free etc... (No leaks -> philo full || 1 philo die 💀)
+*/
 
-// input = ./philo 5 800 200 200 [5]
-
-int main(int ac, char **av)
+int	main(int argc, char **argv)
 {
-    t_table table;
+	t_table	table;
 
-    if (ac == 5 || ac == 6)
-    {   
-        // correct input
-		
-        // 1) Error checking, filling table table
-        parse_input(&table, av);  // done
-		
-        // 2) Creating the actual think
-        data_init(&table); // done
-		
-        // 3) 
-        dinner_start(&table); // done
-		
-        // 4) No leaks -> philo full || 1 philo die 💀
-        clean_up(&table); // todo
-    }
-    else
-    {
-        // wrong input
-        error_exit("Wrong input \n" G "Correct is ./philo * *** *** *** [*]"RST);
-    }
+	if (argc == 5 || argc == 6)
+	{
+		parse_input(&table, argv);
+		data_init(&table);
+		dinner_start(&table);
+		clean_up(&table);
+	}
+	else
+		error_exit(G"Wrong input = Correct is ./philo * *** *** *** [*]"RST);
 }

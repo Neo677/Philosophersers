@@ -169,8 +169,6 @@ void	increase_long(t_mutex *mutex, long *value);
 
 void	*alone_philo(void *arg);
 
-
-// monitor
 void	*monitor_dinner(void *data);
 
 void clean_up(t_table *table);
@@ -179,5 +177,11 @@ bool philo_died(t_philospher *philo);
 
 bool	all_philo_full(t_table *table);
 
+void	take_fork(t_philospher *philo);
+void	lache_fork(t_philospher *philo);
+
+void	thinking(t_philospher *philo);
+
+void	eat(t_philospher *philo);
 
 #endif

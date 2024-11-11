@@ -13,11 +13,11 @@
 NAME = philosopher
 
 CFLAGS = -Wall -Werror -Wextra
-GCC = gcc 
+GCC = gcc -fsanitize=thread
 #$(CFLAGS)
 
-SRCS =	main.c init.c parsing.c write.c synchro_utils.c utils.c safe_fonction.c setters_getters.c dinner_start.c monitor.c
-
+SRCS =	main.c init.c parsing.c write.c synchro_utils.c utils.c safe_fonction.c setters_getters.c \
+		dinner_start.c monitor.c routine.c routine_utils.c solo_philo.c
 # SRCS BONUS ?
 
 RM = rm -f
