@@ -14,6 +14,7 @@
 
 /*
 	Module containing setters_getter
+	🚨  THREAD SAFE 🚨
 	to avoid writting LOCK and UNLOCK everywhere
 */
 
@@ -27,19 +28,18 @@ void	set_bool(t_mutex *mutex, bool *dest, bool value)
 
 bool	get_bool(t_mutex *mutex, bool *value)
 {
-	bool res;
+	bool		res;
 
 	safe_mutex_handle(mutex, LOCK);
-	// Reading thread safe
 	res = *value;
 	safe_mutex_handle(mutex, UNLOCK);
 	return (res);
 }
 
 //		LONG
-long get_long(t_mutex *mutex, long *value)
+long	get_long(t_mutex *mutex, long *value)
 {
-	long res;
+	long	res;
 
 	safe_mutex_handle(mutex, LOCK);
 	res = *value;

@@ -17,16 +17,16 @@ void	take_fork(t_philospher *philo)
 	if (philo->id % 2 == 0)
 	{
 		safe_mutex_handle(&philo->second_fork->fork, LOCK);
-		write_status(TAKE_SECOND_FORK, philo, true);
+		write_status(TAKE_SECOND_FORK, philo);
 		safe_mutex_handle(&philo->first_fork->fork, LOCK);
-		write_status(TAKE_FIRST_FORK, philo, true);
+		write_status(TAKE_FIRST_FORK, philo);
 	}
 	else
 	{
 		safe_mutex_handle(&philo->first_fork->fork, LOCK);
-		write_status(TAKE_FIRST_FORK, philo, true);
+		write_status(TAKE_FIRST_FORK, philo);
 		safe_mutex_handle(&philo->second_fork->fork, LOCK);
-		write_status(TAKE_SECOND_FORK, philo, true);
+		write_status(TAKE_SECOND_FORK, philo);
 	}
 }
 

@@ -63,7 +63,7 @@ void	*dinner_simulation(void *data)
 		if (get_bool(&philo->philo_mutex, &philo->full))
 			break ;
 		eat(philo);
-		write_status(SLEEPING, philo, true);
+		write_status(SLEEPING, philo);
 		precise_usleep(philo->table->time_to_sleep, philo->table);
 		thinking(philo);
 	}
@@ -99,13 +99,10 @@ void	dinner_start(t_table *table)
 			alone_philo, &table->philos[0], CREATE);
 	else
 	{
-		i = 0;
-		while (i < table->philo_nbr)
-		{
+		i = -1;
+		while (++i < table->philo_nbr)
 			safe_thread_handle(&table->philos[i].thread_id, dinner_simulation,
 				&table->philos[i], CREATE);
-			i++;
-		}
 	}
 	safe_thread_handle(&table->monitor, monitor_dinner, table, CREATE);
 	table->start_simulation = getime(MILLISECONDS);

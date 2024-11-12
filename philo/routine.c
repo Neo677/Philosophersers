@@ -14,10 +14,9 @@
 
 void	thinking(t_philospher *philo)
 {
-	write_status(THINKING, philo, true);
+	write_status(THINKING, philo);
 	precise_usleep(philo->table->time_to_think, philo->table);
 }
-
 
 /*
 	eat routine
@@ -37,7 +36,7 @@ void	eat(t_philospher *philo)
 	take_fork(philo);
 	set_long(&philo->philo_mutex, &philo->last_meal_time, getime(MILLISECONDS));
 	increase_long(&philo->philo_mutex, &philo->meals_cnt);
-	write_status(EATING, philo, true);
+	write_status(EATING, philo);
 	precise_usleep(philo->table->time_to_eat, philo->table);
 	if (philo->table->nbr_limit_meal > 0)
 	{

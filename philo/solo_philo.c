@@ -37,9 +37,9 @@ void	*alone_philo(void *arg)
 	increase_long(&philo->table->table_mutex,
 		&philo->table->thread_running_nbr);
 	safe_mutex_handle(&philo->first_fork->fork, LOCK);
-	write_status(TAKE_FIRST_FORK, philo, true);
+	write_status(TAKE_FIRST_FORK, philo);
 	precise_usleep(philo->table->time_to_die, philo->table);
-	write_status(DIED, philo, true);
+	write_status(DIED, philo);
 	safe_mutex_handle(&philo->first_fork->fork, UNLOCK);
 	set_bool(&philo->table->table_mutex, &philo->table->end_simulations, true);
 	return (NULL);

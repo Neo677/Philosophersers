@@ -12,17 +12,15 @@
 
 #include "philo.h"
 
-/*
-	clean up after a philo die 
-*/
+// clean up after a philo die 
 
-void clean_up(t_table *table)
+void	clean_up(t_table *table)
 {
-	t_philospher *philo;
-	int i;
+	t_philospher	*philo;
+	int				i;
 
 	i = -1;
-	while(++i > table->philo_nbr)
+	while (++i > table->philo_nbr)
 	{
 		philo = table->philos + i;
 		safe_mutex_handle(&philo->philo_mutex, DESTROY);
@@ -31,18 +29,16 @@ void clean_up(t_table *table)
 	safe_mutex_handle(&table->table_mutex, DESTROY);
 	free(table->fork);
 	free(table->philos);
-	
 }
 
 /*
 	getting timeoffay
-
 	time_code -> SECOND / MILLISECONDS / MICROSECONDE
 */
 
-long getime(t_time_code time_code)
+long	getime(t_time_code time_code)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	if (time_code == MICROSECONDE)
@@ -51,26 +47,7 @@ long getime(t_time_code time_code)
 		return (tv.tv_sec * 1e3 + tv.tv_usec / 1e3);
 	else
 		return (tv.tv_sec);
-
 }
-
-/*long getime(t_time_code time_code)
-{
-	struct timeval tv;
-
-	if (gettimeofday(&tv, NULL))
-		error_exit("Gettimeofday failed");
-	if (SECOND == time_code)
-		return (tv.tv_sec + (tv.tv_usec / 1e6)); // convertion basic mathematique en 
-	else if (MILLISECONDS == time_code)
-		return ((tv.tv_sec * 1e3) + (tv.tv_usec / 1e3));
-	else if (MICROSECONDE == time_code)
-		return ((tv.tv_sec * 1e6) + tv.tv_usec);
-		// le temps total en microsecondes, multiplier tv.tv_sec par 1 000 000 (1e6)
-	else
-		error_exit("Wrong input to gettime!");
-	return (667); // no matter just need to return something
-}*/
 
 /* precise usleep, the real one suck
 
@@ -81,49 +58,15 @@ long getime(t_time_code time_code)
 
 void	precise_usleep(long usec, t_table *table)
 {
-	long start;
+	long	start;
 
 	start = getime(MILLISECONDS);
-	while(!simulation_finish(table) && (getime(MILLISECONDS) - start) < usec)
-	{
+	while (!simulation_finish(table) && (getime(MILLISECONDS) - start) < usec)
 		usleep(50);
-	}
 }
 
-/*void	precise_usleep(long usec, t_table *table)
+void	error_exit(const char *error)
 {
-	long start;
-	long elapsed;
-	long rem;
-
-	start = getime(MICROSECONDE);
-	while (getime(MICROSECONDE) - start < usec)
-	{
-		// 1) 
-		if (simulation_finish(table))
-			break;
-		elapsed = getime(MICROSECONDE) - start;
-		rem = usec - elapsed;
-
-		// to get a spinclock threshold
-		if (rem > 1e3)
-			usleep(rem / 2);
-		else
-		{
-			// SPINLOCK
-			while (getime(MICROSECONDE) - start < usec)
-				;
-
-		}
-
-	}
-
+	printf(RED"🚨  %s  🚨\n"RST, error);
+	exit(EXIT_FAILURE);
 }
-*/
-
-void    error_exit(const char *error)
-{
-    printf(RED"🚨  %s  🚨\n"RST, error);
-    exit(EXIT_FAILURE);
-}
-

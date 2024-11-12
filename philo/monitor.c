@@ -36,7 +36,7 @@ static bool	ft_check_is_death(t_table *table)
 	{
 		if (philo_died(&table->philos[i]))
 		{
-			write_status(DIED, &table->philos[i], true);
+			write_status(DIED, &table->philos[i]);
 			set_bool(&table->table_mutex, &table->end_simulations, true);
 			return (true);
 		}
@@ -57,11 +57,9 @@ static bool	ft_check_is_full(t_table *table)
 void	*monitor_dinner(void *data)
 {
 	t_table	*table;
-	int		i;
 
 	table = (t_table *)data;
 	ft_wait_for_them(table);
-	i = -1;
 	while (!simulation_finish(table))
 	{
 		if (ft_check_is_death(table) || ft_check_is_full(table))

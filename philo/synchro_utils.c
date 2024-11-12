@@ -21,21 +21,24 @@ void	wait_all_thread(t_table *table)
 }
 
 // Monitor busy wait untill all thread are bot running 
+// 	🚨  THREAD SAFE 🚨
+// garantit qu’aucune autre fonction ne modifie 
+// *threads pendant la vérification, évitant ainsi les data races.
 
-bool 	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
+bool	all_thread_running(t_mutex *mutex, long *threads, long philo_nbr)
 {
-	bool res;
+	bool	res;
 
 	res = false;
 	safe_mutex_handle(mutex, LOCK);
 	if (*threads == philo_nbr)
 		res = true;
 	safe_mutex_handle(mutex, UNLOCK);
-	// garantit qu’aucune autre fonction ne modifie *threads pendant la vérification, évitant ainsi les data races.
-
 	return (res);
 }
+
 // increase thread runnning, to synchronise with the monitor 
+
 void	increase_long(t_mutex *mutex, long *value)
 {
 	safe_mutex_handle(mutex, LOCK);
