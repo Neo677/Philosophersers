@@ -10,20 +10,18 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philosopher
+NAME = Philosophers
 
 CFLAGS = -Wall -Werror -Wextra
-GCC = gcc -fsanitize=thread
-#$(CFLAGS)
+GCC = gcc 
+# -fsanitize=thread
 
 SRCS =	main.c init.c parsing.c write.c synchro_utils.c utils.c safe_fonction.c setters_getters.c \
-		dinner_start.c monitor.c routine.c routine_utils.c solo_philo.c write_utils.c
+		dinner_start.c monitor.c routine.c routine_utils.c solo_philo.c write_utils.c parsing_utils.c
 
 RM = rm -f
 
-# SRCS_FLAG_BONUS =  ???
 OBJET = $(SRCS:.c=.o)
-# OBJET BONUS = ???
 
 RED =	\033[0;31m
 GREEN = \033[0;32m
@@ -47,8 +45,6 @@ all: $(NAME)
 clean:
 	@echo "$(RED)remove des fichiers...$(RESET)"
 	$(RM) $(OBJET)
-
-#					 $(OBJS_SRCS_BONUS)
 
 fclean: clean
 	@echo "$(RED)remove de excutable...$(RESET)"

@@ -39,8 +39,8 @@
 # define C "\33[1;36m"
 # define W "\33[1;37m"
 
-/*	 	write fonction macro pour affichage en debug */
-# define DEBUG_MODE 0
+// /*	 	write fonction macro pour affichage en debug */
+// # define DEBUG_MODE 0
 
 /*		Philo Status    */
 typedef enum e_status
@@ -169,6 +169,11 @@ void	safe_thread_handle(pthread_t *thread, void *(*foo)(void *),
 /* 						utils									*/
 void	error_exit(const char *error);
 void	parse_input(t_table *table, char **av);
+
+/* 						parsing utils							*/
+int		ft_is_digit(char c);
+int		ft_is_space(char c);
+int		ft_is_valid_input(char c);
 
 /*			set and get, useful pour ecrire du code limpide 	*/
 void	set_bool(t_mutex *mutex, bool *dest, bool value);
