@@ -3,11 +3,11 @@ Philosophers
 Philosophers est un projet de l’école 42 qui met en œuvre un problème classique de concurrence : le problème des philosophes mangeant. Ce projet consiste à gérer plusieurs threads (philosophes) partageant des ressources limitées (fourchettes) de manière synchronisée, tout en évitant les blocages (deadlocks) et les conditions de compétition (race conditions).
 
 Fonctionnalités
-	•	Gestion de plusieurs philosophes via des threads.
-	•	Synchronisation des accès aux ressources avec des mutex.
-	•	Simulation d’un dîner où chaque philosophe mange, pense et dort.
-	•	Gestion des cas limites tels que la famine ou les ressources insuffisantes.
-	•	Respect des délais pour chaque action selon les paramètres fournis.
+	Gestion de plusieurs philosophes via des threads.
+	Synchronisation des accès aux ressources avec des mutex.
+	Simulation d’un dîner où chaque philosophe mange, pense et dort.
+	Gestion des cas limites tels que la famine ou les ressources insuffisantes.
+	Respect des délais pour chaque action selon les paramètres fournis.
  
 
 03/11/24 : Comprendre les concepts fondamentaux (threads et mutex)
@@ -58,20 +58,20 @@ Cette routine a été implémentée dans la fonction routine, qui est exécutée
 16/11/24: Gestion de la synchronisation
 
 J’ai ajouté une gestion stricte de la synchronisation pour éviter les problèmes suivants :
-	•	Deadlock : Les philosophes bloquent en attendant indéfiniment une fourchette.
-	•	Race condition : Deux philosophes essaient d’accéder à la même fourchette en même temps.
+	Deadlock : Les philosophes bloquent en attendant indéfiniment une fourchette.
+	Race condition : Deux philosophes essaient d’accéder à la même fourchette en même temps.
 
 J’ai également ajouté un système de surveillance dans la fonction monitor, qui vérifie si un philosophe est mort de faim.
 
 Fichiers principaux
-	•	main.c : Point d’entrée du programme, initialisation des données.
-	•	philo.h : Définition des structures et des prototypes.
-	•	dinner_start.c : Lancement de la simulation des philosophes.
-	•	routine.c : Routine des actions des philosophes.
-	•	monitor.c : Surveillance de l’état des philosophes (famine, mort, etc.).
-	•	safe_fonction.c : Fonctions sécurisées pour les actions critiques.
-	•	write.c : Gestion des messages affichés.
-	•	synchro_utils.c : Utilitaires pour la gestion des mutex et synchronisations.
+	main.c : Point d’entrée du programme, initialisation des données.
+	philo.h : Définition des structures et des prototypes.
+	dinner_start.c : Lancement de la simulation des philosophes.
+	routine.c : Routine des actions des philosophes.
+	monitor.c : Surveillance de l’état des philosophes (famine, mort, etc.).
+	safe_fonction.c : Fonctions sécurisées pour les actions critiques.
+	write.c : Gestion des messages affichés.
+	synchro_utils.c : Utilitaires pour la gestion des mutex et synchronisations.
 
 Compilation
 
@@ -89,9 +89,9 @@ Exemple :
 ./philo 5 800 200 200
 
 Cela simule 5 philosophes, avec :
-	•	800 ms avant qu’un philosophe ne meure de faim.
-	•	200 ms pour manger.
-	•	200 ms pour dormir.
+	800 ms avant qu’un philosophe ne meure de faim.
+	200 ms pour manger.
+	200 ms pour dormir.
 
 Concepts clés
 
@@ -104,10 +104,10 @@ Mutex
 Les mutex assurent que les fourchettes (ressources partagées) sont utilisées de manière sécurisée. Cela empêche deux philosophes de prendre la même fourchette.
 
 Règles du Makefile
-	•	make : Compile le projet.
-	•	make clean : Supprime les fichiers objets.
-	•	make fclean : Supprime les fichiers objets et l’exécutable.
-	•	make re : Réexécute un nettoyage complet suivi d’une recompilation.
+	make : Compile le projet.
+	make clean : Supprime les fichiers objets.
+	make fclean : Supprime les fichiers objets et l’exécutable.
+	make re : Réexécute un nettoyage complet suivi d’une recompilation.
 
 Crédits
 
